@@ -2,7 +2,7 @@
 import sys
 import re
 
-from calculus import calculus
+from calculus import *
 
 def check_equation(equation):
     equation = equation.replace(' ', '')
