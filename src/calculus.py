@@ -1,5 +1,4 @@
 
 
-def calculus(therm):
-    print(therm)
-    pass
+def calculus(polynome):
+    print(polynome)

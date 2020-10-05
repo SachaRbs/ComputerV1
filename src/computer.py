@@ -2,6 +2,8 @@
 import sys
 import re
 
+from calculus import calculus
+
 def check_equation(equation):
     equation = equation.replace(' ', '')
     therms = re.split("\+|\-|\=", equation)
@@ -30,21 +32,37 @@ def poly_zero(left, right):
         multi = 0
         left = left + inverse[get] + item
         get = '+'
-    print(left)
     return left
 
 def reduce_form(equation):
+    if equation[0] != '+':
+        equation = '+' + equation
     res = re.findall("[\+\-][.?\d]+\*X\^[.?\d]+", equation)
     polynome = {0: 0,
                 1: 0,
                 2: 0}
     for item in res:
         tmp = item.split('*')
-        print(tmp)
         polynome[int(tmp[1][-1])] = polynome[int(tmp[1][-1])] + float(tmp[0])
-    print(polynome)
+    reduce_ = ""
+    sign = ""
+    maxPol = 0
+    for i in polynome:
+        if polynome[i] != 0:
+            maxPol = i
+            if polynome[i] < 0:
+                sign = ' - '
+                reduce_ = reduce_ + sign + '{} * X^{}'.format((polynome[i] * -1), i)
+            elif polynome[i] == 0:
+                reduce_ = reduce_ + sign + 'X^{}'.format(i)
+            else:
+                reduce_ = reduce_ + sign + '{} * X^{}'.format(polynome[i], i)
+            sign = ' + '
+    reduce_ = (reduce_ + ' = 0').strip()
+    print("Reduced form: {}".format(reduce_))
+    print("Polynomial degree: {}".format(maxPol))
+    return(polynome)
 
-    return equation
 
 def parsing(equation):
     if check_equation(equation) is False:
@@ -62,13 +80,14 @@ def parsing(equation):
     if equation == False:
         print("ERROR")
         exit()
-    equation = reduce_form(equation)
-    return
+    polynome = reduce_form(equation)
+    return polynome
 
 def main():
-
     if len(sys.argv) == 2:
-        parsing(sys.argv[1].replace(' ', ''))
+        polynome = parsing(sys.argv[1].replace(' ', ''))
+        if polynome is not False:
+            calculus(polynome)
 
 
 if __name__ == "__main__":
