@@ -10,7 +10,7 @@ def check_equation(equation):
     therms = list(filter(None, therms))
     # print(therms)
     for therm in therms:
-        if (re.search("[.?\d]+\*X\^[0-2]$", therm)) is None:
+        if (re.search("[.?\d]+\*X\^[0-9]$", therm)) is None:
             return False
     return True
 
@@ -34,6 +34,12 @@ def poly_zero(left, right):
         get = '+'
     return left
 
+def int_or_float(s):
+    try:
+        return int(s)
+    except:
+        return float(s)
+
 def reduce_form(equation):
     if equation[0] != '+':
         equation = '+' + equation
@@ -43,7 +49,10 @@ def reduce_form(equation):
                 2: 0}
     for item in res:
         tmp = item.split('*')
-        polynome[int(tmp[1][-1])] = polynome[int(tmp[1][-1])] + float(tmp[0])
+        try:
+            polynome[int(tmp[1][-1])] = polynome[int(tmp[1][-1])] + int_or_float(tmp[0])
+        except:
+            polynome[int(tmp[1][-1])] = int_or_float(tmp[0])
     reduce_ = ""
     sign = ""
     maxPol = 0
@@ -61,6 +70,9 @@ def reduce_form(equation):
     reduce_ = (reduce_ + ' = 0').strip()
     print("Reduced form: {}".format(reduce_))
     print("Polynomial degree: {}".format(maxPol))
+    if maxPol > 2:
+        print("The polynomial degree is stricly greater than 2, I can't solve.")
+        return False
     return(polynome)
 
 
