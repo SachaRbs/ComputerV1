@@ -1,38 +1,61 @@
+from fractions import Fraction
 
 def _sqrt(num):
   	return num**0.5
 
-def solve_first_poly(polynome):
-    res = - polynome[0] / polynome[1]
-    print("The solution is:")
-    print(res)
+def solve_first_poly(polynome, fraction):
+	x = - polynome[0] / polynome[1]
+	if fraction:
+		fraction = x.as_integer_ratio()
+		print("The solution is: ")
+		print("{}/{} = {}".format(fraction[0], fraction[1], x))
+	else:
+		print("The solution is:")
+		print("{}".format(x))
 
-def solve_second_poly(a, b, c):
-    delta = (b**2) - (4 * a * c)
-    if delta < 0:
-        print("Discriminant is strictly negative, there is no solution:")
-        print("pas de solution")
-    elif delta == 0:
-        print("Discriminant is equal to zero the only solution is:")
-        x = -b / (2 * a)
-        print("une solution : {}".format(res))
-    else:
-        print("Discriminant is strictly positive, the two solutions are:")
-        x1 = (- b - _sqrt(delta)) / (2 * a)
-        x2 = (-b + _sqrt(delta)) / (2 * a)
-        print("x1 : {}".format(x1))
-        print("x2 : {}".format(x2))
+def solve_second_poly(a, b, c, fraction):
+	delta = (b**2) - (4 * a * c)
+	if delta < 0:
+		print("Discriminant is strictly negative, there is two complex solutions:")
+		print("x1: ({} - i * √{})/{}".format(-b, -delta, 2 * a))
+		print("x2: ({} + i * √{})/{}".format(-b, -delta, 2 * a))
+		
+
+	elif delta == 0:
+		print("Discriminant is equal to zero the only solution is:")
+		x = -b / (2 * a)
+		if fraction:
+			fraction = x.as_integer_ratio()
+			print("x: {}/{} = {}".format(fraction[0], fraction[1], x))
+		else:
+			print("x: {}".format(x))
+	else:
+		print("Discriminant is strictly positive, the two solutions are:")
+		x1 = (- b - _sqrt(delta)) / (2 * a)
+		x2 = (-b + _sqrt(delta)) / (2 * a)
+		if fraction:
+			fraction1 = x1.as_integer_ratio()
+			fraction2 = x2.as_integer_ratio()
+			print("x1 : {}/{} = {}".format(fraction1[0], fraction1[1], x1))
+			print("x2 : {}/{} = {}".format(fraction2[0], fraction2[1], x2))
+		else:
+			print("x1 :  {}".format(x1))
+			print("x2 :  {}".format(x2))
 
 
 
-def calculus(polynome):
-    # print(polynome)
-    if not polynome[1] and not polynome[2]:
-        print("tout les nombres sont solutions")
-    elif polynome[2] == 0:
-        solve_first_poly(polynome)
-    else:
-        solve_second_poly(polynome[2], polynome[1], polynome[0])
+def calculus(polynome, fraction):
+	# print(polynome)
+	if not polynome[0] and not polynome[1] and not polynome[2]:
+		print(polynome)
+		print("Reduced form: X = X")
+		print("all the numbers are solution of the equation")
+	elif not polynome[1] and not polynome[2]:
+		print("There is no solution")
+	elif polynome[2] == 0:
+		solve_first_poly(polynome, fraction)
+	else:
+		solve_second_poly(polynome[2], polynome[1], polynome[0], fraction)
 
 
 
