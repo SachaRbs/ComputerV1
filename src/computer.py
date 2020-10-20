@@ -1,4 +1,4 @@
-#Python lib
+import argparse
 import sys
 import re
 
@@ -11,7 +11,7 @@ def parsing(equation):
 		exit()
 	equation = equation.split('=')
 	if len(equation) != 2:
-		print("ERROR: equation is not well formatted, it has to be an equality with only one ('=')")
+		print("ERROR: Equation is not well formatted, it has to be an equality with only one ('=')")
 		exit()
 	if equation[0] == "" or equation[1] == "":
 		print("ERROR: Missing one side of the equality")
@@ -19,7 +19,7 @@ def parsing(equation):
 	if (equation[0] != "0") or (equation[1] != "0"):
 		equation = poly_zero(equation[0], equation[1])
 		if equation == False:
-			print("ERROR: equation is not well formatted")
+			print("ERROR: Equation is not well formatted")
 			exit()
 	elif equation[0] == "0":
 		equation = equation[1]
@@ -35,51 +35,18 @@ def parsing(equation):
 		exit()
 	return polynome
 
-
-def input_polynome():
-	print("equation is of the type : a * X^2 + b * X^1 + c * X^0")
-	polynome = {}
-	a = input("a = ? ")
-	try:
-		a = float(a)
-	except:
-		print("ERROR input has to be a number")
-		exit()
-	b = input("b = ? ")
-	try:
-		b = float(b)
-	except:
-		print("ERROR input has to be a number")
-		exit()
-	c = input("c = ? ")
-	try:
-		c = float(c)
-	except:
-		print("ERROR input has to be a number")
-		exit()
-	polynome[2] = a
-	polynome[1] = b
-	polynome[0] = c
-	get_reduce(polynome)
-	return(polynome)
-
-
 def main():
-	fraction = 0
-	if len(sys.argv) >= 2:
-		if len(sys.argv) > 2 and sys.argv[2] == "-F":
-			fraction = 1
-		polynome = parsing(sys.argv[1].replace(' ', ''))
-		if polynome is not False:
-			calculus(polynome, fraction)
-	else:
-		print("Usage: python3 computer.py '[POLYNOME]'")
-		print("OPTION: -F : Write solution into a fraction")
-		r = input("do you want to create a polynome ? [y/n]")
-		if r == 'y':
-			polynome = input_polynome()
-			calculus(polynome, 0)
+	parser = argparse.ArgumentParser()
+	parser.add_argument("equation", help="polynomial equation to solve")
+	parser.add_argument("-f", "--fraction", help="print the result of the equation as a fraction", action="store_true")
+	parser.add_argument("-g", "--graph", help="plot the graph of the polynome", action="store_true")
+	parser.add_argument("-v", "--verbose", help="calculs details", action="store_true")
 
+	args = parser.parse_args()
+	polynome = parsing(args.equation.replace(' ', ''))
+	print(args.fraction)
+	if polynome is not False:
+		calculus(polynome, args)
 
 if __name__ == "__main__":
 	main()
